@@ -40,6 +40,7 @@ for ($i = 0; $i < count($imgs);$i++) {
   $fulldb[$i]['link'] = $links->item($i)->textContent;
 }
 
+#add to github
 //echo '<img src=\"'.$fulldb[5]["img"].'" />'
 echo json_encode($fulldb);
 /*
