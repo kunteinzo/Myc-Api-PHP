@@ -4,19 +4,36 @@ require 'vendor/autoload.php';
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 
-$client = new Client();
-$headers = [
-  'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'
-];
-$request = new Request('GET', 'https://theync.com/', $headers);
-$res = $client->sendAsync($request)->wait();
-//echo $res->getBody();
-$htmlString = (string) $res->getBody();
-//add this line to suppress any warnings
-libxml_use_internal_errors(true);
-$doc = new DOMDocument();
-$doc->loadHTML($htmlString);
-$xpath = new DOMXPath($doc);
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: GET");
+#header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
+header("Access-Control-Max-Age: 3600");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+$uri = parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
+echo $uri;
+/*
+if($_SERVER['REQUEST_METHOD']=='GET'){
+  echo 'This is get';
+}*/
+
+function request(string $url): DOMXPath {
+  $client = new Client();
+  $headers = [
+  'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'];
+  $request = new Request('GET', 'https://theync.com/', $headers);
+  $res = $client->sendAsync($request)->wait();
+  //echo $res->getBody();
+  $htmlString = (string) $res->getBody();
+  //add this line to suppress any warnings
+  libxml_use_internal_errors(true);
+  $doc = new DOMDocument();
+  $doc->loadHTML($htmlString);
+  return new DOMXPath($doc);
+}
+
+$xpath = request('https://www.theync.com/');
 
 $imgs = $xpath->evaluate('//div[@class="today-top"]//div[@class="inner-block"]//a//span[@class="image"]//img/@src');
 
