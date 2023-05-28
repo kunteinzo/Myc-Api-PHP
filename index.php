@@ -1,4 +1,4 @@
-ဘ<?php
+<?php
 require 'vendor/autoload.php';
 require 'utils.php';
 
@@ -15,7 +15,9 @@ $uri = explode('/',$uri);
 if($_SERVER['REQUEST_METHOD']=='GET'){
   echo 'This is get';
 }*/
-
+if (!isset($_GET['url'])){
+  exit('No Url');
+}
 $uri = htmlspecialchars($_GET['url']);
 
 $xpath = request($uri);
@@ -39,15 +41,16 @@ function read(DOMNodeList $nodelist,int $pos):string{
   return ($v1!=null)? $v1->textContent : 'Null';
 }
 
+$fulldb['status'] = 200;
 for ($i = 0; $i < count($imgs);$i++) {
-  $fulldb[$i]["img"] = $imgs->item($i)->textContent;
-  $fulldb[$i]["title"] = $titles->item($i)->textContent;
-  $fulldb[$i]["user"] = /*$users->item($i)->textContent;*/read($users,$i);
-  $fulldb[$i]['id_gold'] = $golds->item($i)->textContent;
+  $fulldb['data'][$i]["img"] = $imgs->item($i)->textContent;
+  $fulldb['data'][$i]["title"] = $titles->item($i)->textContent;
+  $fulldb['data'][$i]["user"] = /*$users->item($i)->textContent;*/read($users,$i);
+  $fulldb['data'][$i]['id_gold'] = $golds->item($i)->textContent;
   #$tid = $users->item($i)->getAttribute('href');
   #$fulldb[$i]['userid'] = (str_contains($tid,'theync')) ?substr($tid,20) : 'null';
-  $fulldb[$i]['uploaded_date'] = $upeds->item($i)->textContent;
-  $fulldb[$i]['link'] = $links->item($i)->getAttribute('href');
+  $fulldb['data'][$i]['uploaded_date'] = $upeds->item($i)->textContent;
+  $fulldb['data'][$i]['link'] = $links->item($i)->getAttribute('href');
 }
 
 echo json_encode($fulldb);
