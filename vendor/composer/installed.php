@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'theync/unofficial-api',
-        'pretty_version' => '0.0.1',
-        'version' => '0.0.1.0',
-        'reference' => NULL,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '7d45d168dfe284de10b281ca0793cb56116652f8',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -101,9 +101,9 @@
             'dev_requirement' => false,
         ),
         'theync/unofficial-api' => array(
-            'pretty_version' => '0.0.1',
-            'version' => '0.0.1.0',
-            'reference' => NULL,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '7d45d168dfe284de10b281ca0793cb56116652f8',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
