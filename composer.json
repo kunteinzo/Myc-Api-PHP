@@ -2,6 +2,7 @@
    "name":"theync/unofficial-api",
    "description":"TheYNC api",
    "version":"0.0.1-alpha",
+   "license": "proprietary",
    "require": {
       "guzzlehttp/guzzle": "^7.0"
    }
