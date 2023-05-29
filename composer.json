@@ -1,6 +1,7 @@
 {
    "name":"theync/unofficial-api",
    "description":"TheYNC api",
+   "version":"0.0.1-alpha",
    "require": {
       "guzzlehttp/guzzle": "^7.0"
    }
