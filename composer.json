@@ -1,4 +1,5 @@
 {
+   "name":"theync/unofficial-api",
    "require": {
       "guzzlehttp/guzzle": "^7.0"
    }
