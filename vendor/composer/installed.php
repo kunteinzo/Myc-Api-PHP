@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
-        'name' => '__root__',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'name' => 'theync/unofficial-api',
+        'pretty_version' => '0.0.1-alpha',
+        'version' => '0.0.1.0-alpha',
         'reference' => NULL,
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
@@ -10,15 +10,6 @@
         'dev' => true,
     ),
     'versions' => array(
-        '__root__' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => NULL,
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'guzzlehttp/guzzle' => array(
             'pretty_version' => '7.7.0',
             'version' => '7.7.0.0',
@@ -106,6 +97,15 @@
             'reference' => '26954b3d62a6c5fd0ea8a2a00c0353a14978d05c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/deprecation-contracts',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'theync/unofficial-api' => array(
+            'pretty_version' => '0.0.1-alpha',
+            'version' => '0.0.1.0-alpha',
+            'reference' => NULL,
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
