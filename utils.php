@@ -16,8 +16,13 @@ function request(string $url): DOMXPath{
   return new DOMXPath($doc);
 }
 
-function ext(DOMXPath $xpath,string $reg): DOMNodeList{
+function ext(DOMXPath $xpath,string $reg): Mixed{
   return $xpath->evaluate($reg);
+}
+
+function read(DOMNodeList $nodelist,int $pos):Mixed{
+  $v1 = $nodelist->item($pos);
+  return ($v1!=null)? $v1->textContent : Null;
 }
 
 ?>
