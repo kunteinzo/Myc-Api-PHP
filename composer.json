@@ -1,8 +1,8 @@
 {
-   "name":"theync/unofficial-api",
-   "description":"TheYNC api",
-   "license": "proprietary",
-   "version":"0.0.1-alpha",
+  "name":"theync/unofficial-api",
+  "description":"TheYNC api",
+  "license": "proprietary",
+  "version":"0.0.1",
   "authors":[
     {
       "name": "Khun Thein Htet Oo",
@@ -10,7 +10,7 @@
       "homepage": "https://github.com/kunteinzo"
     }
   ],
-   "require": {
+  "require": {
      "php": "^8.0",
       "guzzlehttp/guzzle": "^7.0"
    }
