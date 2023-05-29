@@ -2,7 +2,6 @@
   "name":"theync/unofficial-api",
   "description":"TheYNC api",
   "license": "proprietary",
-  "version":"0.0.1",
   "authors":[
     {
       "name": "Khun Thein Htet Oo",
