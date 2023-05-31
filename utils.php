@@ -20,9 +20,11 @@ function ext(DOMXPath $xpath,string $reg): Mixed{
   return $xpath->evaluate($reg);
 }
 
-function read(DOMNodeList $nodelist,int $pos):Mixed{
-  $v1 = $nodelist->item($pos);
-  return ($v1!=null)? $v1->textContent : Null;
+function upbyuser($link){
+  if ($link==null){
+    return Null;
+  }
+  return ext(request($link), 'string(//div[@class="upload-button"]//div[@class="inner-block"]/@href)');
 }
 
 ?>

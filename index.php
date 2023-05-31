@@ -7,62 +7,77 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+//error_reporting(0);
 
 $uri = parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
+$url = 'https://theync.com';
 
 // Re-index the array
-$uri = array_values(/*Remove empty string elements from array*/array_filter(explode('/',$uri), function($value) {
-    return $value !== "";
-}));
+$uri = explode('/',$uri);
 
+if ($uri[1]=='search'){
+  $url = $url."/search/$uri[2]/page".(($uri[3]!=null)?$uri[3]:1).".html";
+} else if ($uri[1]=='latest'){
+  $url = $url."/most-recent/";
+}
 
 /*
 if($_SERVER['REQUEST_METHOD']=='GET'){
   echo 'This is get';
 }*/
 
-$url;
-if (isset($_GET['url'])){
-  $url = htmlspecialchars($_GET['url']);
-} else {
-  $url = 'https://theync.com';
+
+if (isset($_GET['search'])){
+  $kw = htmlspecialchars($_GET['search']);
+  $turl = "/search/$kw/page1.html";
+  $tpage;
+  if (isset($_GET['page'])){
+    $tpage = htmlspecialchars($_GET['page']);
+    $turl = "/search/$kw"."/page$tpage.html";
+  }
+  $url = $url.$turl;
 }
 
 $xpath = request($url);
-$fulldb = [];
+$db = [];
 
 $pages = ext($xpath, '//div[@id="pages"]//div[@class="pagination-row"]//div[@class="inner-block"]//a/@href');
-$active = ext($xpath, 'string(//div[@id="pages"]//div[@class="pagination-row"]//div[@class="inner-block"]//span[@class="active"])');
 
-$fulldb['active'] = (int)$active;
+$db['active'] = (int)ext($xpath, 'string(//div[@id="pages"]//div[@class="pagination-row"]//div[@class="inner-block"]//span[@class="active"])');
 
 for ($i = 0;$i < count($pages);$i++) {
-  $fulldb['page'][$i] = (int)substr($pages->item($i)->textContent,4,-5);
+  $db['page'][$i] = (int)substr($pages->item($i)->textContent,4,-5);
 }
 
 $imgs = ext($xpath, '//div[@class="content-block"]//div[@class="inner-block"]//a//span[@class="image"]//img/@src');
 
 $golds = ext($xpath, '//div[@class="content-block"]//div[@class="inner-block"]//a//span[@class="item-info"]//span[@class="border-gold"]');
 
-$titles = $xpath->evaluate('//div[@class="content-block"]//div[@class="inner-block"]//a//span[@class="item-info"]//span[@class="title"]');
+$titles = ext($xpath, '//div[@class="content-block"]//div[@class="inner-block"]//a//span[@class="item-info"]//span[@class="title"]');
 
-$users = $xpath->evaluate('//div[@class="content-block"]//div[@class="inner-block"]//span[@class="user"]//a');
+$users = ext($xpath, '//div[@class="content-block"]//div[@class="inner-block"]//span[@class="user"]//a');
 
-$links = $xpath->evaluate('//div[@class="content-block"]//div[@class="inner-block"]//a[@data-title]');
+$links = ext($xpath, "//div[@class=\"content-block\"]//div[@class=\"inner-block\"]//a[@data-title]/@href");
 
-$upeds = $xpath->evaluate('//div[@class="content-block"]//div[@class="inner-block"]//span[@class="item-info"]//span[@class="added left"]//span[@class="count"]');
+$upeds = ext($xpath, '//div[@class="content-block"]//div[@class="inner-block"]//span[@class="item-info"]//span[@class="added left"]//span[@class="count"]');
 
 for ($i = 0; $i < count($imgs);$i++) {
-  $fulldb['data'][$i]["img"] = $imgs->item($i)->textContent;
-  $fulldb['data'][$i]["title"] = $titles->item($i)->textContent;
-  $fulldb['data'][$i]["user"] = read($users,$i);
-  $fulldb['data'][$i]['user_id'] = read($users,$i)? substr($users->item($i)->getAttribute('href'),20): Null;
-  $fulldb['data'][$i]['id_gold'] = read($golds,$i);
-  #$tid = $users->item($i)->getAttribute('href');
-  #$fulldb[$i]['userid'] = (str_contains($tid,'theync')) ?substr($tid,20) : 'null';
-  $fulldb['data'][$i]['uploaded_date'] = $upeds->item($i)->textContent;
-  $fulldb['data'][$i]['link'] = $links->item($i)->getAttribute('href');
+  $db['data'][$i]["img"] = $imgs->item($i)->textContent;
+  $db['data'][$i]["title"] = $titles->item($i)->textContent;
+  $user = $users->item($i);
+  
+  $db['data'][$i]["user"] = ($user!=null)? $user->textContent:'';
+  
+  $db['data'][$i]['userpath'] = ($user!=null)? $user->getAttribute('href'):'';
+
+  $db['data'][$i]['isexternal'] = str_contains($db['data'][$i]['user'],'theync');
+
+  $db['data'][$i]['isgold'] = ($golds->item($i)!=null);
+  
+  $db['data'][$i]['uploaded_date'] = $upeds->item($i)->textContent;
+  
+  $db['data'][$i]['link'] = ext($xpath, 'string(//div[@class="content-block"]//div[@class="inner-block"]//a[@title="'.$db["data"][$i]["title"].'"]/@href)');
 }
 
-echo json_encode($fulldb);
+echo json_encode($db);
 ?>
