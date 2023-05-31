@@ -26,10 +26,11 @@ if (isset($_GET['video'])){
 
 if ($uri[1]=='search'){
   $url = $url."/search/$uri[2]/page".(($uri[3]!=null)?$uri[3]:1).".html";
-  getMain($url);
 } else if ($uri[1]=='latest'){
   $url = $url."/most-recent/";
-  getMain($url);
+  if ($uri[2]>1){
+    $url = $url."page$$uri[2].html";
+  }
 } else if ($uri[1]=='channels'){
   $url = $url.'/channels';
   $x = request($url);
@@ -42,6 +43,10 @@ if ($uri[1]=='search'){
     $db[$i]['link'] = $links->item($i)->textContent;
   }
   echo json_encode($db);
+} else if ($uri[1]>1){
+  $url = $url."/page$uri[1].html";
 }
+
+getMain($url);
 
 ?>
