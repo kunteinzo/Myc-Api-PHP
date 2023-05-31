@@ -19,6 +19,10 @@ if (isset($_GET['url'])){
   getMain($_GET['url']);
   exit(0);
 }
+if (isset($_GET['video'])){
+  loadVideo($_GET['video']);
+  exit(0);
+}
 
 if ($uri[1]=='search'){
   $url = $url."/search/$uri[2]/page".(($uri[3]!=null)?$uri[3]:1).".html";

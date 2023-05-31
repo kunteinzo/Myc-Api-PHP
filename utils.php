@@ -27,6 +27,28 @@ function upbyuser($link){
   return ext(request($link), 'string(//div[@class="upload-button"]//div[@class="inner-block"]/@href)');
 }
 
+function loadVideo($url){
+  $x = request($url);
+  $links = ext($x,'//script[@type="text/javascript"]');
+  $link = '';
+  $thumb = '';
+  foreach ($links as $l){
+    if (str_contains($l->textContent,'file')){
+      $string = $l->textContent;
+      preg_match('/file:\s*"(.*?)"/', $string, $m1);
+      preg_match('/image:\s*"(.*?)"/', $string, $m2);
+
+      if (isset($m1[1])) {
+        $link = $m1[1];
+      }
+      if (isset($m2[1])) {
+        $thumb = $m2[1];
+      }
+    }
+  }
+  echo json_encode(array('link'=>$link,'thumb'=>$thumb));
+}
+
 function getMain($url){
   $xpath = request($url);
   $db = [];
