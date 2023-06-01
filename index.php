@@ -12,15 +12,18 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $uri = parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
 $url = 'https://theync.com';
 
-// Re-index the array
 $uri = explode('/',$uri);
 
 if (isset($_GET['url'])){
-  getMain($_GET['url']);
+  echo json_encode(getMain($_GET['url']));
   exit(0);
 }
-if (isset($_GET['video'])){
-  loadVideo($_GET['video']);
+if (isset($_GET['view'])){
+  loadVideo($_GET['view']);
+  exit(0);
+}
+if (isset($_GET['userload'])){
+  echo json_encode(getMain(upbyuser($_GET['userload'])));
   exit(0);
 }
 
@@ -29,7 +32,7 @@ if ($uri[1]=='search'){
 } else if ($uri[1]=='latest'){
   $url = $url."/most-recent/";
   if ($uri[2]>1){
-    $url = $url."page$$uri[2].html";
+    $url = $url."page$uri[2].html";
   }
 } else if ($uri[1]=='channels'){
   $url = $url.'/channels';
@@ -47,6 +50,6 @@ if ($uri[1]=='search'){
   $url = $url."/page$uri[1].html";
 }
 
-getMain($url);
+echo json_encode(getMain($url));
 
 ?>

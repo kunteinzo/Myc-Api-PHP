@@ -22,13 +22,14 @@ function ext(DOMXPath $xpath,string $reg): Mixed{
 
 function upbyuser($link){
   if ($link==null){
-    return Null;
+    return "Error";
   }
-  return ext(request($link), 'string(//div[@class="upload-button"]//div[@class="inner-block"]/@href)');
+  return ext(request($link), 'string(//div[@class="upload-button"]//div[@class="inner-block"]//a/@href)');
 }
 
 function loadVideo($url){
   $x = request($url);
+  $db = getMain($x);
   $links = ext($x,'//script[@type="text/javascript"]');
   $link = '';
   $thumb = '';
@@ -46,20 +47,23 @@ function loadVideo($url){
       }
     }
   }
-  echo json_encode(array('link'=>$link,'thumb'=>$thumb));
+  echo json_encode(array('link'=>$link,'thumb'=>$thumb,'related'=>$db));
 }
 
 function getMain($url){
-  $xpath = request($url);
+  $xpath = ($url instanceof DOMXPath)? $url:request($url);
   $db = [];
 
   $pages = ext($xpath, '//div[@id="pages"]//div[@class="pagination-row"]//div[@class="inner-block"]//a/@href');
 
   $db['active'] = (int)ext($xpath, 'string(//div[@id="pages"]//div[@class="pagination-row"]//div[@class="inner-block"]//span[@class="active"])');
-
-  for ($i = 0;$i < count($pages);$i++) {
-    $db['page'][$i] = (int)substr($pages->item($i)->textContent,4,-5);
+  $pa = [];
+  $ip = 0;
+  foreach ($pages as $p){
+    $pa[$ip] = (int)substr($p->textContent,4,-5);
+    $ip++;
   }
+  $db['pages'] = max($pa);
 
   $imgs = ext($xpath, '//div[@class="content-block"]//div[@class="inner-block"]//a//span[@class="image"]//img/@src');
 
@@ -90,7 +94,7 @@ function getMain($url){
   
     $db['data'][$i]['link'] = ext($xpath, 'string(//div[@class="content-block"]//div[@class="inner-block"]//a[@title="'.$db["data"][$i]["title"].'"]/@href)');
   }
-  echo json_encode($db);
+  return $db;
 }
 
 ?>
